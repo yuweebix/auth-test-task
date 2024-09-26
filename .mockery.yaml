@@ -1,0 +1,12 @@
+with-expecter: true
+packages:
+  github.com/yuweebix/auth-test-task/internal/api:
+    config:
+      dir: ./mocks/api
+    interfaces:
+      domain:
+        config:
+          outpkg: mocks
+          filename: domain_mock.go
+          mockname: MockDomain
+
