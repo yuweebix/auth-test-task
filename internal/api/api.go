@@ -12,22 +12,12 @@ type domain interface {
 	RefreshToken(context.Context, *models.TokenRefreshRequest) (*models.TokenRefreshResponse, error)
 }
 
-type API struct {
-	domain
-	server *http.Server
-}
+func RegisterServeMux(domain domain) (mux *http.ServeMux) {
+	mux = http.NewServeMux()
 
-func NewAPI(domain domain) (api *API) {
-	api = &API{
-		domain: domain,
-		server: &http.Server{
-			Addr:    ":42069",
-			Handler: api.newMux(),
-		},
-	}
+	// Tokens
+	mux.Handle("POST /access", NewAccessHandler(domain))
+	mux.Handle("POST /refresh", NewRefreshHandler(domain))
+
 	return
-}
-
-func (api API) ListenAndServe() {
-	api.server.ListenAndServe()
 }
